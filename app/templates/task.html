@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="dashboard-header">
+        <div>
+            <h2>Welcome, {{ username }}!</h2>
+            <p>Tasks</p>
+            <p>Keep your day steady with a calm, focused plan.</p>
+        </div>
+        <div class="summary-strip" aria-label="Task summary">
+            <div class="summary-pill">{{ total_tasks }} task{% if total_tasks != 1 %}s{% endif %} total</div>
+            <div class="summary-pill">{{ completed_tasks }} completed</div>
+            <div class="summary-pill">{{ pending_tasks }} pending</div>
+        </div>
+    </div>
+
+    <form method="post" class="task-form">
+        <input type="text" name="title" placeholder="What needs to be done?" required>
+        <textarea name="description" placeholder="Add a short note"></textarea>
+        <button type="submit">Add Task</button>
+    </form>
+
+    <div class="task-list">
+        {% for task in tasks %}
+        <div class="task-card {% if task.completed %}completed{% endif %}">
+            <div class="task-main">
+                <form method="post" action="{{ url_for('tasks.toggle_task', task_id=task.id) }}" class="inline-form">
+                    <button type="submit" class="check-btn" aria-label="Mark task as complete">{% if task.completed %}✓{% else %}○{% endif %}</button>
+                </form>
+                <div class="task-content">
+                    <h3>{{ task.title }}</h3>
+                    {% if task.description %}<p>{{ task.description }}</p>{% endif %}
+                </div>
+            </div>
+            <div class="task-actions">
+                <form method="post" action="{{ url_for('tasks.edit_task', task_id=task.id) }}" class="inline-form edit-form">
+                    <input type="text" name="title" value="{{ task.title }}" required>
+                    <textarea name="description">{{ task.description or '' }}</textarea>
+                    <button type="submit">Save</button>
+                </form>
+                <form method="post" action="{{ url_for('tasks.delete_task', task_id=task.id) }}" class="inline-form">
+                    <button type="submit" class="danger-btn">Delete</button>
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p>No tasks yet. Start by adding your first one.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

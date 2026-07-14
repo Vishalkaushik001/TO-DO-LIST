@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="auth-card">
+    <h2>{% if admin_mode %}Admin access{% else %}Welcome back{% endif %}</h2>
+    <p>{% if admin_mode %}Use your admin credentials to manage the app.{% else %}Pick up where you left off and keep your day feeling light.{% endif %}</p>
+    <form method="post">
+        <input type="text" name="username" placeholder="Username" autocomplete="username" required>
+        <input type="password" name="password" placeholder="Password" autocomplete="current-password" required>
+        <button type="submit">{% if admin_mode %}Admin Login{% else %}Login{% endif %}</button>
+    </form>
+    {% if not admin_mode %}
+    <p>New here? <a href="{{ url_for('auth.register') }}">Create an account</a></p>
+    <p>Admin? <a href="{{ url_for('auth.admin_login') }}">Sign in here</a></p>
+    {% endif %}
+</div>
+{% endblock %}

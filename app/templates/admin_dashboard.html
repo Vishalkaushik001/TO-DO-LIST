@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="dashboard-header">
+        <div>
+            <h2>Admin Dashboard</h2>
+            <p>Manage the app header and review the stored data.</p>
+        </div>
+    </div>
+
+    <form method="post" action="{{ url_for('auth.admin_settings') }}" class="task-form">
+        <input type="text" name="header_title" placeholder="Header title" value="{{ header_title }}" required>
+        <input type="text" name="header_subtitle" placeholder="Header subtitle" value="{{ header_subtitle }}" required>
+        <button type="submit">Save Header</button>
+    </form>
+
+    <div class="task-actions" style="margin-bottom: 1rem;">
+        <a href="{{ url_for('auth.admin_dashboard') }}" class="button-link">Overview</a>
+        <a href="{{ url_for('auth.admin_database') }}" class="button-link">View Database</a>
+    </div>
+
+    {% if show_database %}
+    <div class="task-list">
+        <div class="task-card">
+            <h3>Users</h3>
+            <pre>{% for user in users %}{{ user.id }} | {{ user.username }} | {{ user.role }} | {{ user.email }}\n{% endfor %}</pre>
+        </div>
+        <div class="task-card">
+            <h3>Tasks</h3>
+            <pre>{% for task in tasks %}{{ task.id }} | {{ task.title }} | {{ task.completed }} | {{ task.user.username }}\n{% endfor %}</pre>
+        </div>
+    </div>
+    {% else %}
+    <div class="task-list">
+        <div class="task-card">
+            <h3>Users</h3>
+            <p>{{ users|length }} registered users</p>
+        </div>
+        <div class="task-card">
+            <h3>Tasks</h3>
+            <p>{{ tasks|length }} total tasks</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
